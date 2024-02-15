@@ -114,7 +114,7 @@ players = pygame.sprite.Group()
 
 
 # Global Variable Pause
-pause = False
+#pause = False
 
 
 # Define a Player Class
@@ -136,7 +136,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_delay = 250
         self.last_shot = pygame.time.get_ticks()
         # Players lives
-        self.lives = 3     
+        #self.lives = 3     
 
         # Initialize the power-up related attributes
         self.powerup = None  # No power-up initially
@@ -553,7 +553,7 @@ def main_menu():
 # Game over screen function
 def game_over_screen():
     global clock  # Use the global clock variable
-    global game_Flag
+    global game_Flag    
 
     # Load the main menu background image
     game_over_background_img = pygame.image.load(os.path.join(ASSETS_PATH, 'main.png'))
@@ -805,29 +805,14 @@ def start_game(single_player=True, difficulty='medium'):
                         player2.powerup = 'tripple_laser'
                         player2.powerup_time = pygame.time.get_ticks()   # Capture the start time of the power-up effect
 
-        # Check for collision with power-ups
-        #collisions = pygame.sprite.spritecollide(player, powerups, True)  
-        #for collision in collisions:
-            #if collision.type == 'tripple_laser':
-                #player.powerup = 'tripple_laser'
-               # player.powerup_time = pygame.time.get_ticks()   # Capture the start time of the power-up effect
+
 
         # Implement the Power-up Timer Logic
         if player.powerup == 'tripple_laser':
             if pygame.time.get_ticks() - player.powerup_time > 10000:  # 10 seconds duration
                 player.powerup = None  # Revert to normal bullets
 
-#        # Detect collision between the player and the power-up.
-#        powerup_hits = pygame.sprite.spritecollide(player, powerups, True)
-#        for hit in powerup_hits:
-#            if hit.type == 'tripple_laser':
-#                player.powerup = 'tripple_laser'
-#                player.powerup_time = pygame.time.get_ticks()
-
-#        # In the player update or game loop, revert back to normal bullets after 10 seconds.
-#        if player.powerup == 'tripple_laser':
-#            if pygame.time.get_ticks() - player.powerup_time > 10000:  # 10 seconds
-#                player.powerup = None                
+             
 
 
         # Check for collisions between the player and the first type of enemies
