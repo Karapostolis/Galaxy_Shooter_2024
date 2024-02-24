@@ -58,6 +58,20 @@ def insert_Data_To_SQL():
     execute_query(connection,sql_insert_users)
 
 
+
+def get_Last_Data_From_SQL():
+    global connection
+    sql_get_Last_Insert=f"""
+    SELECT *
+    FROM users 
+    ORDER BY id 
+    DESC LIMIT 1;
+    """
+    execute_query(connection,sql_get_Last_Insert)
+
+    cname,cusers=execute_read_query(connection,sql_get_Last_Insert)
+    return cusers
+
 def get_High_Score():
     global connection
 

@@ -102,6 +102,10 @@ current_Time = datetime.datetime.now()
 # Create clock for controlling the frame rate
 clock = pygame.time.Clock()
 
+# Set up variables for enemy spawn frequency
+start_time = pygame.time.get_ticks()  # Get the current time in milliseconds
+delay_time = 60000  # 30 seconds in milliseconds
+
 # Create sprite groups for enemies, bullets, and second enemies
 all_sprites = pygame.sprite.Group()
 enemies = pygame.sprite.Group()
@@ -449,7 +453,7 @@ def show_highScore_screen():
         mouse_pos = pygame.mouse.get_pos()
 
         # Draw the "Options" title
-        options_title = title_font.render("Options", True, WHITE)
+        options_title = title_font.render("High Score", True, WHITE)
         screen.blit(options_title, (WIDTH // 2 - options_title.get_rect().width // 2, 50))
 
         # Display the top 3 scores dynamically using get_High_Score function
@@ -571,8 +575,8 @@ def game_over_screen():
     button_hover_color = BLUE
 
     # Create rectangles for buttons
-    restart_button_rect = pygame.Rect(WIDTH // 2 - button_width // 2, HEIGHT // 2 - button_height // 2 - button_gap, button_width, button_height)
-    exit_button_rect = pygame.Rect(WIDTH // 2 - button_width // 2, HEIGHT // 2 - button_height // 2 + button_gap, button_width, button_height)
+    restart_button_rect = pygame.Rect(WIDTH // 2 - button_width //2, HEIGHT - 230 - button_height // 2 - button_gap, button_width, button_height)
+    exit_button_rect = pygame.Rect(WIDTH // 2 - button_width // 2, HEIGHT - 230 - button_height // 2 + button_gap, button_width, button_height)
 
     game_over_running = True
     while game_over_running:
@@ -583,6 +587,15 @@ def game_over_screen():
         # Draw "You Lost!" text
         game_over_text = font.render("You Lost!", True, (255, 0, 0))
         game_over_text_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 3 * button_gap))
+
+        Score_Text = get_Last_Data_From_SQL()
+
+        for i, score_data in enumerate(Score_Text):
+            text = f"{score_data[1]} - Score: {score_data[2]}, Time: {score_data[3]}"
+            text_surface = font.render(text, True, RED)
+            text_rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 1 * button_gap))
+            screen.blit(text_surface, text_rect)
+
         screen.blit(game_over_text, game_over_text_rect)
 
         # Draw buttons
@@ -687,11 +700,18 @@ def start_game(single_player=True, difficulty='medium'):
         player1.update(keys)
         player2.update(keys)        
 
+    enemy_spawn_counter = 9
+    # Get the current time
+    current_time = pygame.time.get_ticks()
     # Create enemy instances
-    for _ in range(9):
+    for _ in range(enemy_spawn_counter):
         enemy = Enemy(enemy_img, exploded_enemy_img)
         all_sprites.add(enemy)
         enemies.add(enemy)
+        if current_time - start_time >= delay_time:
+            enemy_spawn_counter += 1
+            print("Enemy frequency increased")
+
 
 
     # Maximum number of active second enemies
